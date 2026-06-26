@@ -1,2 +1,1 @@
-# react-playground
-Various react challenges
+Various React chanllenges in React + TypeScript + Vite
