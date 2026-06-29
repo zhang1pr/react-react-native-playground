@@ -1,7 +1,49 @@
+main {
+  display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
 .guess-correct {
-    color: darkgreen;
+  color: darkgreen;
 }
 
 .guess-wrong {
-    color: darkred;
+	color: darkred;
+}
+
+.color-block {
+  margin: 20px;
+  width: 300px;
+  height: 300px; 
+}
+
+.correct-answer, .wrong-answer {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px; 
+}
+
+.streak-text {
+	display: block;
+	margin: 10px;	
+}
+
+.verdict-text, .correct-answer, .wrong-answer {
+  display: inline-block;
 }

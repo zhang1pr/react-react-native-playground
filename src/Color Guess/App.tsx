@@ -1,61 +1,58 @@
 import { useState } from 'react'
 import './App.css'
-
-const randomHex = () => '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0').toUpperCase();
-
-function shuffle(array) {
-  let currentIndex: number = array.length;
-
-  while (currentIndex != 0) {
-    const randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-  }
-}
+import { shuffle, getRandomHex } from './Utils';
 
 function App() {
-  const [hex, setHex] = useState(randomHex);
   const [streak, setStreak] = useState(0);
-  const [verdict, setVerdict] = useState(null);
+  const [prevHex, setPrevHex] = useState('');
+  const [guess, setGuess] = useState('');
+  const [hex, setHex] = useState(getRandomHex);
 
-  const options = [hex];
-  while (options.length != 3) {
-    const newHex = randomHex();
-    if (!options.includes(newHex))
-      options.push(newHex)
-  }
+  const optionSet = new Set([hex]);
+  while (optionSet.size != 3)
+    optionSet.add(getRandomHex())
 
-  shuffle(options);
+  const options = shuffle([...optionSet]);
 
-  const handleClick = (event) => {
-    const guess = event.target.value;
-
-    if (guess == hex) {
+  const handleClick = (guess: string) => {
+    if (guess === hex) {
       setStreak(streak => streak + 1);
-      setVerdict(true);
     } else {
       setStreak(0);
-      setVerdict(false);
     }
 
-    setHex(randomHex())
+    setGuess(guess);
+    setPrevHex(hex);
+    setHex(getRandomHex());
   }
 
-  const verdictText = verdict ? 'correct' : 'wrong';
-  const className = verdict ? 'guess-correct' : 'guess-wrong';
-
+  const isCorrectGuess = guess === prevHex;
+  const verdictText1 = `Answer ${guess} is ${isCorrectGuess ? 'correct!' : 'wrong.'}`;
+  const verdictText2 = isCorrectGuess ? '' : `Correct answer is ${hex}.`
+  const className = isCorrectGuess ? 'guess-correct' : 'guess-wrong';
+  
   return (
-    <div>
-      <div style={{ backgroundColor: `${hex}`, width: '500px', height: '500px' }}></div>
-      <li>
-        {options.map(item => (
-          <button value={item} onClick={handleClick} key={item}>{item}</button>
-        ))}
-      </li>
-      <p>Streak: {streak} </p>
-      {verdict == null ? <></> : <p className={className}> Answer is {verdictText} </p>}
-    </div>
+    <main>
+      <div className="color-block" style={{ backgroundColor: `${hex}`}}></div>
+      <ul>
+        <li>
+          {options.map((item: string) => (
+            <button onClick={() => handleClick(item)} key={item}>{item}</button>
+          ))}
+        </li>
+      </ul>
+
+      <span className='streak-text'>Streak: {streak} </span>
+      { guess != '' && <span className={`verdict-text ${className}`}> {verdictText1} </span> }
+      { guess != '' && !isCorrectGuess && 
+          <>
+            <span className='wrong-answer' style={{ backgroundColor: `${prevHex}`}}></span>
+            <span className={`verdict-text ${className}`}> {verdictText2} </span>
+            <span className='correct-answer' style={{ backgroundColor: `${guess}`}}></span>
+          </>
+      }
+    </main>
   )
 }
 
-export default App
+export default App;
