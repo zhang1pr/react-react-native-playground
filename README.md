@@ -30,3 +30,4 @@ Use Expo Go, a simulator, or `npm run web:native` for web.
 ## Projects
 
 - **Color Guess** — pick the hex code that matches the color swatch (available in both `react/` and `react-native/`)
+- **Word Search** — search from one word to another, inspired by [Linxicon](https://linxicon.com/)
